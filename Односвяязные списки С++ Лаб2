@@ -1,0 +1,52 @@
+// Узел односвязного списка
+struct Node {
+    int data;    // Данные узла
+    Node* next;  // Указатель на следующий узел
+    
+    // Конструктор узла
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+// Класс односвязного списка
+class LinkedList {
+private:
+    Node* head;  // Голова списка
+    
+public:
+    // Конструктор списка
+    LinkedList() : head(nullptr) {}
+    
+    // Добавление элемента в конец списка
+    void append(int value) {
+        Node* newNode = new Node(value);  // Создаем новый узел
+        if (!head) {  // Если список пустой
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next) {  // Идем до конца списка
+            temp = temp->next;
+        }
+        temp->next = newNode;  // Добавляем новый узел
+    }
+    
+    // Вывод списка
+    void printList() {
+        Node* temp = head;
+        while (temp) {
+            std::cout << temp->data << " ";
+            temp = temp->next;
+        }
+        std::cout << std::endl;
+    }
+};
+
+// Пример использования
+int main() {
+    LinkedList list;
+    list.append(1);
+    list.append(2);
+    list.append(3);
+    list.printList();  // Выведет: 1 2 3
+    return 0;
+}
