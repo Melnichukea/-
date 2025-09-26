@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+// Функция поиска максимального элемента
+pair<int, int> findMaxElement(const int* arr, int size) {
+    if (size <= 0) return {0, -1}; // Обработка пустого массива
+    
+    int maxVal = arr[0];    // Текущий максимум
+    int maxIndex = 0;       // Индекс максимума
+    
+    // Проходим по всем элементам массива
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > maxVal) {
+            maxVal = arr[i];
+            maxIndex = i;
+        }
+    }
+    
+    return {maxVal, maxIndex};
+}
+
+int main() {
+    const int SIZE = 10;
+    int arr[SIZE] = {3, 8, 1, 6, 9, 2, 7, 4, 5, 0};
+    
+    auto [maxValue, maxPosition] = findMaxElement(arr, SIZE);
+    
+    cout << "Максимальный элемент: " << maxValue << endl;
+    cout << "Его индекс: " << maxPosition << endl;
+    
+    return 0;
+}
