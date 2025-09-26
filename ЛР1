@@ -1,0 +1,70 @@
+1)
+public class MinElementFinder {
+    // Метод поиска минимального элемента
+    public static int[] findMinElement(int[] array) {
+        if (array == null || array.length == 0) {
+            return new int[]{-1, -1}; // Обработка пустого массива
+        }
+        
+        int minValue = array[0]; // Текущий минимум
+        int minIndex = 0; // Индекс минимума
+        
+        // Проходим по всем элементам массива
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < minValue) {
+                minValue = array[i];
+                minIndex = i;
+            }
+        }
+        
+        return new int[]{minValue, minIndex};
+    }
+    
+    public static void main(String[] args) {
+        int[] numbers = {5, 3, 8, 1, 6, 2, 9, 4};
+        
+        int[] result = findMinElement(numbers);
+        int minValue = result[0];
+        int minPosition = result[1];
+        
+        System.out.println("Минимальный элемент: " + minValue);
+        System.out.println("Его позиция: " + minPosition);
+    }
+}
+
+
+2)
+import java.util.*;
+
+public class RemoveDuplicates {
+    // Метод удаления дубликатов
+    public static List<Integer> removeDuplicates(List<Integer> list) {
+        Set<Integer> seen = new HashSet<>(); // Множество для отслеживания значений
+        List<Integer> result = new ArrayList<>();
+        
+        for (Integer number : list) {
+            if (!seen.contains(number)) {
+                seen.add(number);
+                result.add(number);
+            }
+        }
+        
+        return result;
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 2, 4, 3, 5, 1);
+        
+        System.out.println("Исходный список: " + numbers);
+        
+        List<Integer> uniqueNumbers = removeDuplicates(numbers);
+        
+        System.out.println("Список после удаления дубликатов: " + uniqueNumbers);
+    }
+}
+
+
+
+
+
+
