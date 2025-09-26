@@ -1,0 +1,49 @@
+// Узел односвязного списка
+class Node {
+    int data;    // Данные узла
+    Node next;   // Ссылка на следующий узел
+    
+    // Конструктор узла
+    Node(int val) {
+        data = val;
+        next = null;
+    }
+}
+
+// Класс односвязного списка
+public class LinkedList {
+    private Node head;  // Голова списка
+    
+    // Добавление элемента в конец списка
+    public void append(int value) {
+        Node newNode = new Node(value);  // Создаем новый узел
+        if (head == null) {  // Если список пустой
+            head = newNode;
+            return;
+        }
+        Node temp = head;
+        while (temp.next != null) {  // Идем до конца списка
+            temp = temp.next;
+        }
+        temp.next = newNode;  // Добавляем новый узел
+    }
+    
+    // Вывод списка
+    public void printList() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+    
+    // Пример использования
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+        list.append(1);
+        list.append(2);
+        list.append(3);
+        list.printList();  // Выведет: 1 2 3
+    }
+}
