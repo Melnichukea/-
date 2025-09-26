@@ -1,0 +1,107 @@
+1)
+#include <iostream>
+using namespace std;
+
+// Функция поиска максимального элемента
+pair<int, int> findMaxElement(const int* arr, int size) {
+    if (size <= 0) return {0, -1}; // Обработка пустого массива
+    
+    int maxVal = arr[0];    // Текущий максимум
+    int maxIndex = 0;       // Индекс максимума
+    
+    // Проходим по всем элементам массива
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > maxVal) {
+            maxVal = arr[i];
+            maxIndex = i;
+        }
+    }
+    
+    return {maxVal, maxIndex};
+}
+
+int main() {
+    const int SIZE = 10;
+    int arr[SIZE] = {3, 8, 1, 6, 9, 2, 7, 4, 5, 0};
+    
+    auto [maxValue, maxPosition] = findMaxElement(arr, SIZE);
+    
+    cout << "Максимальный элемент: " << maxValue << endl;
+    cout << "Его индекс: " << maxPosition << endl;
+    
+    return 0;
+}
+
+
+2)
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+// Структура узла списка
+struct Node {
+    int data;
+    Node* next;
+    
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+// Функция удаления дубликатов
+void removeDuplicates(Node*& head) {
+    if (!head) return; // Пустой список
+    
+    unordered_set<int> seen;    // Множество для отслеживания значений
+    Node* current = head;
+    Node* prev = nullptr;
+    
+    while (current) {
+        if (seen.find(current->data) != seen.end()) {
+            // Элемент уже встречался - удаляем его
+            Node* temp = current;
+            prev->next = current->next;
+            delete temp;
+            current = prev->next;
+        } else {
+            seen.insert(current->data);
+            prev = current;
+            current = current->next;
+        }
+    }
+}
+
+// Функция для вывода списка
+void printList(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    // Создаем список: 1 -> 2 -> 3 -> 2 -> 4 -> 3
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(2);
+    head->next->next->next->next = new Node(4);
+    head->next->next->next->next->next = new Node(3);
+    
+    cout << "Исходный список: ";
+    printList(head);
+    
+    removeDuplicates(head);
+    
+    cout << "Список после удаления дубликатов: ";
+    printList(head);
+    
+    // Освобождение памяти
+    while (head) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+    
+    return 0;
+}
+
