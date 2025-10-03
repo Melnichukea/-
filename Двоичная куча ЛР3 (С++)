@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+class BinaryHeap {
+private:
+    int* heap;      // Массив для хранения элементов кучи
+    int size;       // Текущий размер кучи
+    int capacity;   // Максимальная вместимость кучи
+
+    // Метод восстановления свойства кучи снизу вверх
+    void heapifyUp(int index);
+    
+    // Метод восстановления свойства кучи сверху вниз
+    void heapifyDown(int index);
+    
+    // Метод обмена элементов
+    void swap(int i, int j);
+
+public:
+    // Конструктор кучи
+    BinaryHeap(int cap) : capacity(cap), size(0) {
+        heap = new int[capacity];
+    }
+
+    // Деструктор
+    ~BinaryHeap() {
+        delete[] heap;
+    }
+
+    // Метод добавления элемента в кучу
+    void insert(int element);
+
+    // Метод удаления минимального элемента
+    int extractMin();
+
+    // Метод
