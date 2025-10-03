@@ -1,0 +1,58 @@
+public class BinaryHeap {
+    private int[] heap; // Массив для хранения элементов кучи
+    private int size; // Текущий размер кучи
+    private int capacity; // Максимальная вместимость кучи
+
+    // Конструктор кучи
+    public BinaryHeap(int capacity) {
+        this.capacity = capacity;
+        size = 0;
+        heap = new int[capacity];
+    }
+
+    // Метод добавления элемента в кучу
+    public void insert(int element) {
+        if (size == capacity) {
+            System.out.println("Куча переполнена!");
+            return;
+        }
+        
+        // Добавляем элемент в конец массива
+        heap[size] = element;
+        size++;
+        
+        // Восстанавливаем свойство кучи
+        heapifyUp(size - 1);
+    }
+
+    // Метод удаления минимального элемента
+    public int extractMin() {
+        if (size == 0) {
+            System.out.println("Куча пуста!");
+            return -1;
+        }
+        
+        // Сохраняем минимальный элемент
+        int root = heap[0];
+        
+        // Перемещаем последний элемент в корень
+        heap[0] = heap[size - 1];
+        size--;
+        
+        // Восстанавливаем свойство кучи
+        heapifyDown(0);
+        
+        return root;
+    }
+
+    // Метод восстановления свойства кучи снизу вверх
+    private void heapifyUp(int index) {
+        int parent = (index - 1) / 2;
+        
+        // Пока текущий элемент меньше родителя
+        while (index > 0 && heap[index] < heap[parent]) {
+            // Меняем элементы местами
+            swap(index, parent);
+            index = parent;
+            parent = (index - 1) / 2;
+        }
