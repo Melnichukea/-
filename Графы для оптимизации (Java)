@@ -1,0 +1,126 @@
+import java.util.*;
+
+public class DijkstraAlgorithm {
+    // Класс для представления ребра графа
+    static class Edge {
+        int destination;
+        int weight;
+        
+        public Edge(int destination, int weight) {
+            this.destination = destination;
+            this.weight = weight;
+        }
+    }
+    
+    // Метод для поиска кратчайших путей
+    public static void dijkstra(List<List<Edge>> graph, int start) {
+        int n = graph.size();
+        int[] distances = new int[n];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        boolean[] visited = new boolean[n];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        
+        distances[start] = 0;
+        pq.offer(new int[]{start, 0});
+        
+        while (!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int u = current[0];
+            
+            if (visited[u]) continue;
+            visited[u] = true;
+            
+            for (Edge edge : graph.get(u)) {
+                int v = edge.destination;
+                int weight = edge.weight;
+                
+                if (distances[u] + weight < distances[v]) {
+                    distances[v] = distances[u] + weight;
+                    pq.offer(new int[]{v, distances[v]});
+                }
+            }
+        }
+        
+        System.out.println("Кратчайшие расстояния от вершины " + start + ":");
+        for (int i = 0; i < n; i++) {
+            System.out.println("До вершины " + i + ": " + distances[i]);
+        }
+    }
+    
+    public static void main(String[] args) {
+        int n = 5; // Количество вершин
+        List<List<Edge>> graph = new ArrayList<>();
+        
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        // Добавление ребер
+        graph.get(0).add(new Edge(1, 9));
+        graph.get(0).add(new Edge(2, 6));
+        graph.get(0).add(new Edge(3, 5));
+        graph.get(2).add(new Edge(1, 2));
+        graph.get(2).add(new Edge(3, 4));
+        
+        dijkstra(graph, 0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+import java.util.*;
+
+public class PrimAlgorithm {
+    // Класс для представления ребра графа
+    static class Edge implements Comparable<Edge> {
+        int source;
+        int destination;
+        int weight;
+        
+        public Edge(int source, int destination, int weight) {
+            this.source = source;
+            this.destination = destination;
+            this.weight = weight;
+        }
+        
+        @Override
+        public int compareTo(Edge other) {
+            return Integer.compare(this.weight, other.weight);
+        }
+    }
+    
+    // Метод для поиска минимального остовного дерева
+    public static void prim(List<List<Edge>> graph) {
+        int n = graph.size();
+        boolean[] visited = new boolean[n];
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        List<Edge> mst = new ArrayList<>();
+        
+        // Начинаем с вершины 0
+        visited[0] = true;
+        pq.addAll(graph.get(0));
+        
+        while (!pq.isEmpty() && mst.size() < n - 1) {
+            Edge edge = pq.poll();
+            
+            if (visited[edge.destination]) continue;
+            
+            visited[edge.destination] = true;
+            mst.add(edge);
+            
+            for (Edge nextEdge : graph.get(edge.destination)) {
+                if (!visited[nextEdge.destination]) {
+                    pq.offer(nextEdge);
+                }
+            }
+        }
+        
+        System.out.println("Минимальное остовное дерево:");
