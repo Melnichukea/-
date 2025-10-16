@@ -1,0 +1,155 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using namespace std;
+
+// Функция для вычисления длины пути
+int calculatePathLength(const vector<vector<int>>& graph, const vector<int>& path) {
+    int length = 0;
+    int n = path.size();
+    
+    // Суммируем расстояния между последовательными городами
+    for (int i = 0; i < n - 1; ++i) {
+        length += graph[path[i]][path[i + 1]];
+    }
+    // Добавляем расстояние от последнего города до первого
+    length += graph[path[n - 1]][path[0]];
+    
+    return length;
+}
+
+// Функция для решения задачи коммивояжера
+void solveTSP(const vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> path(n);
+    
+    // Создаем начальный путь (0, 1, 2, ..., n-1)
+    for (int i = 0; i < n; ++i) {
+        path[i] = i;
+    }
+    
+    int minLength = INT_MAX;
+    vector<int> bestPath = path;
+    
+    // Перебираем все перестановки городов
+    do {
+        int currentLength = calculatePathLength(graph, path);
+        if (currentLength < minLength) {
+            minLength = currentLength;
+            bestPath = path;
+        }
+    } while (next_permutation(path.begin() + 1, path.end()));
+    
+    // Выводим результат
+    cout << "Минимальный путь: ";
+    for (int city : bestPath) {
+        cout << city << " ";
+    }
+    cout << "\nМинимальная длина пути: " << minLength << endl;
+}
+
+int main() {
+    // Пример матрицы расстояний (граф)
+    vector<vector<int>> graph = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+    
+    solveTSP(graph);
+    
+    return 0;
+}
+
+
+
+
+
+
+//JAVA
+
+
+
+
+import java.util.Arrays;
+
+public class TSP {
+    // Матрица расстояний между городами
+    private static int[][] graph = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+    
+    // Количество городов
+    private static int numCities = graph.length;
+    
+    // Переменная для хранения минимальной длины пути
+    private static int minPathLength = Integer.MAX_VALUE;
+    
+    // Массив для хранения лучшего пути
+    private static int[] bestPath;
+    
+    public static void main(String[] args) {
+        // Создаем начальный путь
+        int[] path = new int[numCities];
+        for (int i = 0; i < numCities; i++) {
+            path[i] = i;
+        }
+        
+        // Запускаем поиск оптимального пути
+        findShortestPath(path, 0);
+        
+        // Выводим результат
+        System.out.print("Минимальный путь: ");
+        for (int city : bestPath) {
+            System.out.print(city + " ");
+        }
+        System.out.println("\nМинимальная длина пути: " + minPathLength);
+    }
+    
+    // Рекурсивная функция для поиска всех перестановок
+    private static void findShortestPath(int[] path, int pos) {
+        // Если достигли конца пути
+        if (pos == numCities - 1) {
+            int currentLength = calculatePathLength(path);
+            if (currentLength < minPathLength) {
+                minPathLength = currentLength;
+                bestPath = Arrays.copyOf(path, path.length);
+            }
+            return;
+        }
+        
+        // Генерируем все перестановки
+        for (int i = pos; i < numCities; i++) {
+            swap(path, pos, i);
+            findShortestPath(path, pos + 1);
+            swap(path, pos, i); // Возвращаем обратно
+        }
+    }
+    
+    // Функция для вычисления длины пути
+    private static int calculatePathLength(int[] path) {
+        int length = 0;
+        for (int i = 0; i < numCities - 1; i++) {
+            length += graph[path[i]][path[i + 1]];
+        }
+        length += graph[path[numCities - 1]][path[0]]; // Возвращение в начальную точку
+        return length;
+    }
+    
+    // Функция для обмена элементов в массиве
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+
+
+
