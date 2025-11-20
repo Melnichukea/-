@@ -1,0 +1,399 @@
+## Вариант 2(С++)
+
+#include <iostream>
+
+double power(double x, int n) {
+    // Базовый случай: x⁰ = 1
+    if (n == 0) {
+        return 1.0;
+    }
+    
+    // Если степень отрицательная, преобразуем в 1 / x^|n|
+    if (n < 0) {
+        return 1.0 / power(x, -n);
+    }
+    
+    // Рекурсивный случай: xⁿ = x * x^(n-1)
+    // Оптимизация: если n чётное, xⁿ = (x²)^(n/2)
+    if (n % 2 == 0) {
+        return power(x * x, n / 2);
+    } else {
+        return x * power(x, n - 1);
+    }
+}
+
+int main() {
+    double x = 2.0;
+    int n = -3;
+    std::cout << "power(" << x << ", " << n << ") = " << power(x, n) << std::endl;
+    return 0;
+}
+
+
+##Вариант 2 (Java)
+
+public class Power {
+
+    public static double power(double x, int n) {
+        // Базовый случай: x⁰ = 1
+        if (n == 0) {
+            return 1.0;
+        }
+        
+        // Если степень отрицательная, преобразуем в 1 / x^|n|
+        if (n < 0) {
+            return 1.0 / power(x, -n);
+        }
+        
+        // Рекурсивный случай: xⁿ = x * x^(n-1)
+        // Оптимизация: если n чётное, xⁿ = (x²)^(n/2)
+        if (n % 2 == 0) {
+            return power(x * x, n / 2);
+        } else {
+            return x * power(x, n - 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        double x = 2.0;
+        int n = -3;
+        System.out.println("power(" + x + ", " + n + ") = " + power(x, n));
+    }
+}
+
+
+##Вариант 4(С++)
+
+#include <iostream>
+#include <string>
+#include <algorithm>  // для std::swap
+
+
+void reverseString(std::string& str, int start, int end) {
+    // Базовый случай: если start >= end, строка перевернута
+    if (start >= end) {
+        return;
+    }
+    
+    // Меняем местами символы на позициях start и end
+    std::swap(str[start], str[end]);
+    
+    // Рекурсивный вызов для оставшейся части
+    reverseString(str, start + 1, end - 1);
+}
+
+int main() {
+    std::string text = "hello";
+    reverseString(text, 0, text.length() - 1);
+    std::cout << text << std::endl;  // Вывод: "olleh"
+    return 0;
+}
+
+
+##Вариант 4 (Java)
+public class ReverseString {
+    public static void reverseString(StringBuilder sb, int start, int end) {
+        // Базовый случай: если start >= end, строка перевернута
+        if (start >= end) {
+            return;
+        }
+        
+        // Меняем местами символы
+        char temp = sb.charAt(start);
+        sb.setCharAt(start, sb.charAt(end));
+        sb.setCharAt(end, temp);
+        
+        // Рекурсивный вызов
+        reverseString(sb, start + 1, end - 1);
+    }
+
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder("hello");
+        reverseString(sb, 0, sb.length() - 1);
+        System.out.println(sb.toString());  // Вывод: "olleh"
+    }
+}
+
+
+##Вариант 8 (С++)
+
+#include <iostream>
+#include <vector>
+
+int arraySum(const std::vector<int>& arr, int index) {
+    // Базовый случай: дошли до конца массива
+    if (index >= arr.size()) {
+        return 0;
+    }
+    
+    // Рекурсивный случай: текущий элемент + сумма остальных
+    return arr[index] + arraySum(arr, index + 1);
+}
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    int sum = arraySum(numbers, 0);
+    std::cout << "Sum: " << sum << std::endl;  // Вывод: 15
+    return 0;
+}
+
+##Вариант 4 (Java)
+public class ArraySum {
+    public static int arraySum(int[] arr, int index) {
+        // Базовый случай: вышли за границы массива
+        if (index >= arr.length) {
+            return 0;
+        }
+        
+        // Рекурсивный случай: текущий элемент + сумма остальных
+        return arr[index] + arraySum(arr, index + 1);
+    }
+
+    public static void main(String[] args) {
+        int[] numbers = {1, 2, 3, 4, 5};
+        int sum = arraySum(numbers, 0);
+        System.out.println("Sum: " + sum);  // Вывод: 15
+    }
+}
+
+##Вариант 12 (С++)
+
+#include <iostream>
+#include <vector>
+
+// Функция для вывода сочетания
+void printCombination(const std::vector<int>& combination) {
+    for (int num : combination) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+}
+
+// Рекурсивная функция генерации сочетаний
+void generateCombinations(int n, int k, int start, std::vector<int>& current, std::vector<std::vector<int>>& result) {
+    // Базовый случай: собрали нужное количество элементов
+    if (current.size() == k) {
+        result.push_back(current);
+        return;
+    }
+
+    // Проходим по возможным элементам для добавления
+    for (int i = start; i <= n; ++i) {
+        current.push_back(i);                    // Добавляем элемент
+        generateCombinations(n, k, i + 1, current, result);  // Рекурсивный вызов
+        current.pop_back();                  // Удаляем элемент (откат)
+    }
+}
+
+// Основная функция: возвращает все сочетания
+std::vector<std::vector<int>> getCombinations(int n, int k) {
+    std::vector<std::vector<int>> result;
+    std::vector<int> current;
+    generateCombinations(n, k, 1, current, result);
+    return result;
+}
+
+int main() {
+    int n = 4, k = 2;
+    auto combinations = getCombinations(n, k);
+
+    std::cout << "Combinations of " << k << " from " << n << ":" << std::endl;
+    for (const auto& comb : combinations) {
+        printCombination(comb);
+    }
+
+    return 0;
+}
+Вывод для n=4 k=2
+1 2
+1 3
+1 4
+2 3
+2 4
+3 4
+
+##Вариант 12 (Java)
+import java.util.*;
+
+public class Combinations {
+
+    // Рекурсивная функция генерации сочетаний
+    private static void generateCombinations(int n, int k, int start, List<Integer> current, List<List<Integer>> result) {
+        // Базовый случай: собрали нужное количество элементов
+        if (current.size() == k) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        // Проходим по возможным элементам для добавления
+        for (int i = start; i <= n; i++) {
+            current.add(i);                           // Добавляем элемент
+            generateCombinations(n, k, i + 1, current, result); // Рекурсивный вызов
+            current.remove(current.size() - 1); // Удаляем элемент (откат)
+        }
+    }
+
+    // Основная функция: возвращает все сочетания
+    public static List<List<Integer>> getCombinations(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> current = new ArrayList<>();
+        generateCombinations(n, k, 1, current, result);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int n = 4, k = 2;
+        List<List<Integer>> combinations = getCombinations(n, k);
+
+        System.out.println("Combinations of " + k + " from " + n + ":");
+        for (List<Integer> comb : combinations) {
+            System.out.println(comb);
+        }
+    }
+}
+вывод для n=4 k=2
+[1, 2]
+[1, 3]
+[1, 4]
+[2, 3]
+[2, 4]
+[3, 4]
+
+##Вариант 13(С++) для N=8
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int N = 8;  // Размер доски (8×8)
+
+// Функция проверяет, можно ли поставить ферзя в клетку (row, col)
+bool isSafe(vector<int>& board, int row, int col) {
+    for (int i = 0; i < row; ++i) {
+        // Проверяем:
+        // 1. Один столбец (board[i] == col)
+        // 2. Главная диагональ (i - board[i] == row - col)
+        // 3. Побочная диагональ (i + board[i] == row + col)
+        if (board[i] == col || 
+            i - board[i] == row - col ||
+            i + board[i] == row + col) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Рекурсивная функция размещения ферзей
+bool solveNQueens(vector<int>& board, int row) {
+    // Базовый случай: все ферзи расставлены (row == N)
+    if (row == N) {
+        return true;  // Решение найдено
+    }
+
+    // Пробуем поставить ферзя в каждую колонку текущей строки
+    for (int col = 0; col < N; ++col) {
+        if (isSafe(board, row, col)) {
+            board[row] = col;  // Ставим ферзя
+
+
+            // Рекурсивно пытаемся расставить оставшихся ферзей
+            if (solveNQueens(board, row + 1)) {
+                return true;  // Решение найдено — выходим
+            }
+
+            // Если не получилось — откат (в этой реализации не обязателен, т.к. мы возвращаем true)
+        }
+    }
+
+    return false;  // Ни одна позиция не подошла — откат
+}
+
+// Функция вывода доски
+void printBoard(const vector<int>& board) {
+    cout << "Решение (координаты ферзей: строка → столбец):\n";
+    for (int i = 0; i < N; ++i) {
+        cout << i + 1 << " → " << board[i] + 1 << endl;
+    }
+
+    cout << "\nВизуализация доски:\n";
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (board[i] == j) {
+                cout << "Q ";  // Ферзь
+            } else {
+                cout << ". ";  // Пустая клетка
+            }
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    vector<int> board(N, -1);  // board[row] = col — ферзь в строке `row` стоит в столбце `col`
+
+
+    if (solveNQueens(board, 0)) {
+        printBoard(board);
+    } else {
+        cout << "Решения не существует!" << endl;
+    }
+
+    return 0;
+}
+
+
+##Вариант 18 (С++)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Graph {
+private:
+    int V;  // Количество вершин
+    vector<vector<int>> adj;  // Список смежности
+    vector<bool> visited;       // Массив меток посещения
+    vector<int> entry_time;     // Время входа в вершину
+    vector<int> exit_time;     // Время выхода из вершины
+    int timer;                  // Глобальный таймер
+
+
+    // Рекурсивная функция DFS
+    void dfsUtil(int v) {
+        // Время входа
+        entry_time[v] = timer++;
+        visited[v] = true;
+        cout << "Вход в вершину " << v << ", время входа: " << entry_time[v] << endl;
+
+
+        // Обход всех смежных вершин
+        for (int neighbor : adj[v]) {
+            if (!visited[neighbor]) {
+                dfsUtil(neighbor);
+            }
+        }
+
+        // Время выхода
+        exit_time[v] = timer++;
+        cout << "Выход из вершины " << v << ", время выхода: " << exit_time[v] << endl;
+    }
+
+public:
+    // Конструктор
+    Graph(int vertices) : V(vertices) {
+        adj.resize(V);
+        visited.resize(V, false);
+        entry_time.resize(V, -1);
+        exit_time.resize(V, -1);
+        timer = 0;
+    }
+
+    // Добавление ребра (ориентированное)
+    void addEdge(int u, int v)
+
+
+
+
+
