@@ -1,0 +1,294 @@
+ блочная (корзинная) сортировка 
+
+def bucket_sort(arr, bucket_count=10):
+    if len(arr) == 0:
+        return arr
+
+    # Находим минимум и максимум для определения диапазона
+    min_val, max_val = min(arr), max(arr)
+    
+    # Создаем пустые корзины
+    buckets = [[] for _ in range(bucket_count)]
+    
+    # Распределяем элементы по корзинам
+    for num in arr:
+        # Вычисляем индекс корзины
+        if max_val == min_val:
+            bucket_idx = 0  # Все значения одинаковы
+        else:
+            bucket_idx = int((num - min_val) / (max_val - min_val) * (bucket_count - 1))
+        buckets[bucket_idx].append(num)
+    
+    # Сортируем каждую корзину и объединяем результат
+    sorted_arr = []
+    for bucket in buckets:
+        sorted_arr.extend(sorted(bucket))  # Используем встроенную сортировку
+    
+    return sorted_arr
+
+
+# Пример использования
+if __name__ == "__main__":
+    data = [0.89, 0.56, 0.65, 0.12, 0.47, 0.34, 0.98, 0.23]
+    print("Исходный массив:", data)
+    sorted_data = bucket_sort(data, bucket_count=5)
+    print("Отсортированный массив:", sorted_data)
+
+
+2)блинная сортировка;
+def flip(arr, k):
+    """Переворачивает подмассив arr[0:k+1] (индексы от 0 до k)."""
+    arr[:k+1] = arr[:k+1][::-1]
+
+def find_max_index(arr, n):
+    """Находит индекс максимального элемента в arr[0:n]."""
+    max_idx = 0
+    for i in range(1, n):
+        if arr[i] > arr[max_idx]:
+            max_idx = i
+    return max_idx
+
+def pancake_sort(arr):
+    """Сортирует массив с помощью блинной сортировки."""
+    n = len(arr)
+    
+    # Последовательно помещаем максимальные элементы в конец
+    for size in range(n, 1, -1):
+        # Находим индекс максимального элемента в текущей неотсортированной части
+        max_idx = find_max_index(arr, size)
+        
+        # Если максимальный уже на своём месте — пропускаем
+        if max_idx == size - 1:
+            continue
+        
+        # Если максимальный не в начале — переворачиваем, чтобы он оказался в начале
+        if max_idx != 0:
+            flip(arr, max_idx)
+        
+        # Переворачиваем всю неотсортированную часть, чтобы максимальный оказался в конце
+        flip(arr, size - 1)
+    
+    return arr
+
+# Пример использования
+if __name__ == "__main__":
+    data = [3, 6, 1, 9, 4, 2]
+    print("Исходный массив:", data)
+    pancake_sort(data)
+    print("Отсортированный массив:", data)
+
+
+3)сортировка бусинами (гравитационная)
+def bead_sort(arr):
+    """
+    Сортировка бусинами (гравитационная сортировка).
+    Работает только для натуральных чисел (включая 0).
+    """
+    if not arr:
+        return arr
+    
+    # Проверяем, что все числа натуральные
+    if any(x < 0 for x in arr):
+        raise ValueError("Bead sort works only for non-negative integers.")
+    
+    # Находим максимальное число — это высота «бусинной сетки»
+    max_val = max(arr)
+    
+    # Создаём «сетку» бусин: строки — уровни, столбцы — исходные числа
+    # Изначально: 1 = есть бусина, 0 = нет бусины
+    grid = [[0] * len(arr) for _ in range(max_val)]
+    
+    # Размещаем бусины: для каждого числа x ставим x бусин в соответствующем столбце
+    for col, num in enumerate(arr):
+        for row in range(num):
+            grid[row][col] = 1
+    
+    # «Гравитация»: бусины падают вниз
+    # Для каждого уровня считаем количество бусин и заполняем снизу
+    for row in range(max_val):
+        bead_count = sum(grid[row])  # Сколько бусин на этом уровне
+        # Заполняем нижние ячейки этого уровня
+        for col in range(len(arr)):
+            if col < bead_count:
+                grid[row][col] = 1
+            else:
+                grid[row][col] = 0
+    
+    # Считаем высоту каждого столбца (количество бусин в столбце) — это отсортированные числа
+    sorted_arr = []
+    for col in range(len(arr)):
+        beads = sum(grid[row][col] for row in range(max_val))
+        sorted_arr.append(beads)
+    
+    return sorted_arr
+
+
+
+# Пример использования
+if __name__ == "__main__":
+    data = [5, 3, 1, 7, 4, 1, 2]
+    print("Исходный массив:", data)
+    sorted_data = bead_sort(data)
+    print("Отсортированный массив:", sorted_data)
+
+
+4)• поиск скачками;
+
+import math
+
+def jump_search(arr, target):
+    """
+    Поиск скачками в отсортированном массиве.
+    Возвращает индекс элемента или -1, если не найден.
+    """
+    n = len(arr)
+    if n == 0:
+        return -1
+
+    # Размер шага: корень из длины массива
+    step = int(math.sqrt(n))
+    
+    # Начальный индекс для скачков
+    prev = 0
+    
+    # Находим блок, где может быть target
+    while prev < n and arr[min(prev + step, n) - 1] < target:
+        prev += step
+        if prev >= n:
+            return -1  # Вышли за границы массива
+    
+    # Линейный поиск в найденном блоке
+    # Начинаем с max(0, prev - step), чтобы не выйти за границы
+    start = max(0, prev - step)
+    for i in range(start, min(prev + step, n)):
+        if arr[i] == target:
+            return i
+    
+    return -1  # Не найден
+
+
+# Пример использования
+if __name__ == "__main__":
+    # Отсортированный массив
+    data = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25]
+    target = 17
+    
+    print("Массив:", data)
+    print("Ищем:", target)
+    
+    index = jump_search(data, target)
+    
+    if index != -1:
+        print(f"Элемент найден на позиции {index}")
+    else:
+        print("Элемент не найден")
+5) экспоненциальный поиск;
+def binary_search(arr, target, left, right):
+    """Бинарный поиск в диапазоне [left, right]."""
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1  # Не найден
+
+
+def exponential_search(arr, target):
+    """
+    Экспоненциальный поиск в отсортированном массиве.
+    Возвращает индекс элемента или -1, если не найден.
+    """
+    n = len(arr)
+    if n == 0:
+        return -1
+    
+    # Проверяем первый элемент
+    if arr[0] == target:
+        return 0
+    
+    # Находим диапазон, где может быть target
+    i = 1
+    while i < n and arr[i] <= target:
+        i *= 2  # Экспоненциальное увеличение: 1, 2, 4, 8, ...
+    
+    # Бинарный поиск в диапазоне [i//2, min(i, n-1)]
+    left = i // 2
+    right = min(i, n - 1)
+    return binary_search(arr, target, left, right)
+
+# Пример использования
+if __name__ == "__main__":
+    # Отсортированный массив
+    data = [2, 5, 8, 12, 16, 23, 38, 45, 67, 78, 89, 91, 105]
+    target = 67
+    
+    print("Массив:", data)
+    print("Ищем:", target)
+    
+    index = exponential_search(data, target)
+    
+    if index != -1:
+        print(f"Элемент найден на позиции {index}")
+    else:
+        print("Элемент не найден")
+6) тернарный поиск
+def ternary_search(arr, target, left=0, right=None):
+    """
+    Тернарный поиск в отсортированном массиве.
+    Возвращает индекс элемента или -1, если не найден.
+    
+    Параметры:
+    arr — отсортированный список
+    target — искомый элемент
+    left — левая граница поиска (по умолчанию 0)
+    right — правая граница поиска (по умолчанию len(arr) - 1)
+    """
+    if right is None:
+        right = len(arr) - 1
+
+    while left <= right:
+        # Находим две точки деления
+        mid1 = left + (right - left) // 3
+        mid2 = right - (right - left) // 3
+
+        # Проверяем элементы в точках деления
+        if arr[mid1] == target:
+            return mid1
+        if arr[mid2] == target:
+            return mid2
+
+        # Определяем, в какой трети искать
+        if target < arr[mid1]:
+            # Ищем в левой трети
+            right = mid1 - 1
+        elif target > arr[mid2]:
+            # Ищем в правой трети
+            left = mid2 + 1
+        else:
+            # Ищем в средней трети
+            left = mid1 + 1
+            right = mid2 - 1
+
+    return -1  # Элемент не найден
+
+
+
+# Пример использования
+if __name__ == "__main__":
+    # Отсортированный массив
+    data = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]
+    target = 17
+
+    print("Массив:", data)
+    print("Ищем:", target)
+
+    index = ternary_search(data, target)
+
+    if index != -1:
+        print(f"Элемент найден на позиции {index}")
+    else:
+        print("Элемент не найден")
+
